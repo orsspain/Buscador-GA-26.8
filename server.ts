@@ -1,15 +1,11 @@
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
-import { searchOfficialLiterature, OFFICIAL_LITERATURE, LiteratureEntry } from "./src/data/officialLiterature.js";
+import { searchOfficialLiterature, OFFICIAL_LITERATURE, LiteratureEntry } from "./src/data/officialLiterature";
 
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Helper to get or instantiate Gemini AI client
 function getGeminiClient(): GoogleGenAI | null {
@@ -294,7 +290,7 @@ Directrices fundamentales:
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
+    console.log(`Server running on port ${PORT}`);
   });
 }
 

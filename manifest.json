@@ -1,8 +1,10 @@
 {
+  "id": "/",
   "name": "Jugadores Anónimos",
   "short_name": "J.A. España",
-  "description": "Comunidad de Autoayuda de Jugadores Anónimos. Reuniones presenciales y por Zoom, literatura oficial de recuperación, autoevaluación y asistencia 24h.",
+  "description": "Comunidad de Autoayuda de Jugadores Anónimos. Reuniones presenciales y por Zoom, literatura oficial de recuperación, autodiagnóstico de 20 preguntas y asistencia 24h.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#f8f9ff",
   "theme_color": "#af101a",
