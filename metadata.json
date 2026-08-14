@@ -1,0 +1,6 @@
+{
+  "name": "Jugadores Anónimos",
+  "description": "Aplicación de apoyo y comunidad de Jugadores Anónimos para encontrar reuniones presenciales y en línea, literatura de recuperación, guía para miembros y asistencia 24h.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
