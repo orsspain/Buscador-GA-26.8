@@ -7,6 +7,45 @@ interface AssistantScreenProps {
   onNavigateToQuestions: () => void;
 }
 
+function renderFormattedContent(content: string) {
+  // Simple markdown renderer for bold text and linebreaks
+  const lines = content.split('\n');
+  return (
+    <div className="space-y-1.5">
+      {lines.map((line, lineIdx) => {
+        if (!line.trim()) {
+          return <div key={lineIdx} className="h-1" />;
+        }
+
+        // Check if line is bullet point
+        const isBullet = line.trim().startsWith('•') || line.trim().startsWith('-');
+        const cleanLine = isBullet ? line.trim().replace(/^[•\-]\s*/, '') : line;
+
+        // Parse bold segments **text**
+        const parts = cleanLine.split(/(\*\*[^*]+\*\*)/g);
+
+        return (
+          <div key={lineIdx} className={isBullet ? 'flex items-start gap-1.5 pl-1' : ''}>
+            {isBullet && <span className="text-[#af101a] font-bold select-none leading-relaxed">•</span>}
+            <span className="flex-1">
+              {parts.map((part, partIdx) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  return (
+                    <strong key={partIdx} className="font-bold text-[#0b1c30]">
+                      {part.slice(2, -2)}
+                    </strong>
+                  );
+                }
+                return part;
+              })}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 export const AssistantScreen: React.FC<AssistantScreenProps> = ({
   onOpenCrisis,
   onNavigateToMeetings,
@@ -16,7 +55,7 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
     {
       id: 'welcome-1',
       role: 'assistant',
-      content: '¿En qué te puedo ayudar hoy? Puedes preguntarme sobre reuniones presenciales o en línea, el programa de recuperación o cómo sobrellevar un momento difícil.',
+      content: '¡Hola! Estoy aquí para acompañarte y responder tus dudas. Puedes preguntarme sobre reuniones presenciales o por Zoom, la literatura de Jugadores Anónimos, o pedir apoyo si estás pasando por un momento difícil.',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -166,13 +205,60 @@ export const AssistantScreen: React.FC<AssistantScreenProps> = ({
               )}
 
               <div
-                className={`max-w-[85%] rounded-2xl p-3.5 sm:p-4 text-[14px] sm:text-[15px] leading-relaxed shadow-sm ${
+                className={`max-w-[85%] rounded-2xl p-3 sm:p-3.5 text-[13px] sm:text-[14px] leading-relaxed shadow-xs ${
                   msg.role === 'user'
                     ? 'bg-[#0b1c30] text-white rounded-tr-none'
                     : 'bg-white text-[#0b1c30] border border-slate-200/90 rounded-tl-none'
                 }`}
               >
-                <div className="whitespace-pre-wrap">{msg.content}</div>
+                {msg.role === 'user' ? (
+                  <div className="whitespace-pre-wrap">{msg.content}</div>
+                ) : (
+                  renderFormattedContent(msg.content)
+                )}
+
+                {/* Contextual navigation shortcuts in assistant message */}
+                {msg.role === 'assistant' && (
+                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                    {msg.content.toLowerCase().includes('zoom') && (
+                      <button
+                        onClick={onNavigateToMeetings}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded-md transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">videocam</span>
+                        Ver Salas Zoom
+                      </button>
+                    )}
+                    {msg.content.toLowerCase().includes('reunion') && (
+                      <button
+                        onClick={onNavigateToMeetings}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-md transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">location_on</span>
+                        Buscar Reuniones
+                      </button>
+                    )}
+                    {(msg.content.toLowerCase().includes('20 preguntas') || msg.content.toLowerCase().includes('test')) && (
+                      <button
+                        onClick={onNavigateToQuestions}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 bg-red-50 hover:bg-red-100 px-2 py-0.5 rounded-md transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">quiz</span>
+                        Hacer 20 Preguntas
+                      </button>
+                    )}
+                    {msg.content.includes('+34 670 691 513') && (
+                      <button
+                        onClick={onOpenCrisis}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-[#af101a] hover:bg-[#930010] px-2 py-0.5 rounded-md transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-[13px]">call</span>
+                        Llamar 24h
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 <div
                   className={`text-[10px] mt-1.5 text-right ${
                     msg.role === 'user' ? 'text-slate-300' : 'text-slate-400'
