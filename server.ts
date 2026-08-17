@@ -300,3 +300,4 @@ Directrices fundamentales:
 }
 
 startServer();
+ix: modelo 3.5-flash'
