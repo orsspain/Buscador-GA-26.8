@@ -145,7 +145,7 @@ Directrices fundamentales:
         ];
 
         const response = await ai.models.generateContent({
-          model: "gemini-3.7-flash",
+          model: "gemini-3.5-flash",
           contents,
           config: {
             systemInstruction,
