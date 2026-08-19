@@ -334,7 +334,7 @@ export const MeetingsScreen: React.FC<MeetingsScreenProps> = ({
                       </span>
                       <span className="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
                         {meeting.dayName} · {meeting.time} ({meeting.durationMinutes} min)
-                         {getSpainTimeLabel(meeting.time, meeting.country) && ` · ${getSpainTimeLabel(meeting.time, meeting.country)} hora España`}
+                        {getSpainTimeLabel(meeting.time, meeting.country) && ` · ${getSpainTimeLabel(meeting.time, meeting.country)} hora España`}
                       </span>
                       {distance !== null && (
                         <span className="text-xs font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded-md">
