@@ -1,12 +1,20 @@
 const COUNTRY_TIMEZONES: Record<string, string> = {
-  "España": "Europe/Madrid",
-  "Colombia": "America/Bogota",
-  "México": "America/Mexico_City",
-  "Argentina": "America/Argentina/Buenos_Aires",
-  "Chile": "America/Santiago",
-  "Uruguay": "America/Montevideo",
-  "Perú": "America/Lima",
+  "espana": "Europe/Madrid",
+  "colombia": "America/Bogota",
+  "mexico": "America/Mexico_City",
+  "argentina": "America/Argentina/Buenos_Aires",
+  "chile": "America/Santiago",
+  "uruguay": "America/Montevideo",
+  "peru": "America/Lima",
 };
+
+function normalize(str: string): string {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+}
 
 function getOffsetMinutes(timeZone: string, date: Date): number {
   const dtf = new Intl.DateTimeFormat('en-US', {
@@ -25,8 +33,10 @@ function getOffsetMinutes(timeZone: string, date: Date): number {
 }
 
 export function getSpainTimeLabel(time: string, country: string): string | null {
-  if (!time || !country || country === "España") return null;
-  const tz = COUNTRY_TIMEZONES[country];
+  if (!time || !country) return null;
+  const normalizedCountry = normalize(country);
+  if (normalizedCountry === 'espana') return null;
+  const tz = COUNTRY_TIMEZONES[normalizedCountry];
   if (!tz) return null;
 
   const [hourStr, minuteStr] = time.split(':');
@@ -52,3 +62,4 @@ export function getSpainTimeLabel(time: string, country: string): string | null 
   if (dayShift === -1) label += ' (día anterior)';
   return label;
 }
+commit
